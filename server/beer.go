@@ -1,6 +1,8 @@
 package server
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 
 	"backend-svc-template"
@@ -19,7 +21,25 @@ type beer struct {
 }
 
 func (b *beer) add(ctx *gin.Context) {
+	req := new(newBeerReq)
 
+	if err := ctx.Bind(req); err != nil {
+		ctx.JSON(http.StatusBadRequest, nil)
+
+		return
+	}
+
+	beer, err := b.bs.Add(&domain.Beer{
+		Name:  req.Name,
+		Brand: req.Brand,
+	})
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, nil)
+
+		return
+	}
+
+	ctx.JSON(http.StatusCreated, beer)
 }
 
 func (b *beer) get(ctx *gin.Context) {
