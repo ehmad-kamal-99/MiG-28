@@ -1,8 +1,9 @@
-package handlers
+package server
 
 import (
-	"backend-svc-template"
 	"github.com/gin-gonic/gin"
+
+	"backend-svc-template"
 )
 
 type ReviewService interface {
@@ -15,18 +16,14 @@ type review struct {
 	rs ReviewService
 }
 
-func NewReview(rs ReviewService) *review {
-	return &review{rs: rs}
-}
-
-func (r *review) Add(ctx *gin.Context) {
+func (r *review) add(ctx *gin.Context) {
 
 }
 
-func (r *review) Delete(ctx *gin.Context) {
+func (r *review) delete(ctx *gin.Context) {
 
 }
 
-func (r *review) List(ctx *gin.Context) {
+func (r *review) list(ctx *gin.Context) {
 
 }

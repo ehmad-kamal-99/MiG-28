@@ -1,3 +1,4 @@
+//go:generate mockgen -destination=./../mocks/review_storage.go -package=mocks . ReviewStorage
 package core
 
 import (
