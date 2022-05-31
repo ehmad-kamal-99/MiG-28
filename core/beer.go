@@ -45,7 +45,7 @@ func (b *beer) Edit(beer *domain.Beer) (*domain.Beer, error) {
 	return beer, nil
 }
 
-func (b *beer) List() ([]*domain.Beer, error) {
+func (b *beer) List(filter, sort []string, limit, offset int) ([]*domain.Beer, error) {
 	return b.bd.List()
 }
 

@@ -44,8 +44,8 @@ type FirebaseConfig struct {
 	StorageBucket    string
 }
 
-// New - sets up new firebase app.
-func New(cfg *FirebaseConfig) *FirebaseAuth {
+// NewFirebaseAuth - sets up new firebase app.
+func NewFirebaseAuth(cfg *FirebaseConfig) *FirebaseAuth {
 	var err error
 
 	var app *firebase.App

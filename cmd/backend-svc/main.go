@@ -33,7 +33,7 @@ func main() {
 	rollbar.SetServerHost(*cfg.ServiceConfig.ServiceRevision)
 	rollbar.SetServerRoot(*cfg.RollbarConfig.RollbarServerRoot)
 
-	firebaseAuth := middleware.New(&middleware.FirebaseConfig{
+	firebaseAuth := middleware.NewFirebaseAuth(&middleware.FirebaseConfig{
 		ProjectID:        *cfg.ProjectID,
 		ServiceAccountID: *cfg.FirebaseConfig.ServiceAccountID,
 	})
@@ -66,7 +66,14 @@ func main() {
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer func() {
-		// close any connections
+		if err := bs.Close(ctx); err != nil {
+			panic(err)
+		}
+
+		if err := rs.Close(ctx); err != nil {
+			panic(err)
+		}
+
 		cancel()
 	}()
 

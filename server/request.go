@@ -18,7 +18,8 @@ type editBeerReq struct {
 type listBeerReq struct {
 	Filter []string `form:"filter"`
 	Sort   []string `form:"sort"`
-	Page   int      `form:"page"`
+	Limit  int      `form:"limit"`
+	Offset int      `form:"offset"`
 }
 
 type deleteBeerReq struct {

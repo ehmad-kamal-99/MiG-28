@@ -67,3 +67,7 @@ func (r *review) List(beerID string) ([]*domain.Review, error) {
 	// TODO: handle logic to list reviews
 	return nil, nil
 }
+
+func (r *review) Close(ctx context.Context) error {
+	return r.client.Disconnect(ctx)
+}
