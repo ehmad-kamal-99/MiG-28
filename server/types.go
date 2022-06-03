@@ -1,8 +1,8 @@
 package server
 
 type newBeerReq struct {
-	Name  string `json:"name"`
-	Brand string `json:"brand"`
+	Name  string `json:"name" validate:"required"`
+	Brand string `json:"brand" validate:"required"`
 }
 
 type getBeerReq struct {

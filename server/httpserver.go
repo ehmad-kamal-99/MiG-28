@@ -39,7 +39,7 @@ func New(bs BeerService, rs ReviewService, auth *middleware.FirebaseAuth) *serve
 	rh := review{rs: rs}
 
 	bg := engine.Group("beer/v1")
-	bg.Use(auth.Check())
+	// bg.Use(auth.Check())
 	{
 		bg.POST("/beer", bh.add)
 		bg.GET("/beer", bh.get)
@@ -49,11 +49,11 @@ func New(bs BeerService, rs ReviewService, auth *middleware.FirebaseAuth) *serve
 	}
 
 	rg := engine.Group("review/v1")
-	rg.Use(auth.Check())
+	// rg.Use(auth.Check())
 	{
 		rg.POST("/review", rh.add)
-		rg.POST("/review", rh.list)
-		rg.POST("/review", rh.delete)
+		rg.GET("/review", rh.list)
+		rg.DELETE("/review", rh.delete)
 	}
 
 	s.engine = engine

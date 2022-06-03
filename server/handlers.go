@@ -1,6 +1,8 @@
+//go:generate mockgen -destination=./../mocks/service.go -package=mocks . BeerService,ReviewService
 package server
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -28,6 +30,8 @@ func (b *beer) add(ctx *gin.Context) {
 
 		return
 	}
+
+	fmt.Println("Valid request, Request Body: ", req)
 
 	beer, err := b.bs.Add(&domain.Beer{
 		Name:  req.Name,

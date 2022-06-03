@@ -11,6 +11,7 @@ require (
 	github.com/golang/mock v1.6.0 // indirect
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/rollbar/rollbar-go v1.4.2
+	github.com/stretchr/testify v1.7.1 // indirect
 	go.mongodb.org/mongo-driver v1.9.1
 	golang.org/x/oauth2 v0.0.0-20220524215830-622c5d57e401 // indirect
 	google.golang.org/api v0.81.0 // indirect
