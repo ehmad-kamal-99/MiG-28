@@ -33,4 +33,5 @@ Important concepts studied and used:
 ## root/
 * Contains our domain types, Makefile, Dockerfile etc. Files that don't need to be referenced/packaged/encapsulated.
 
-```Note: This repository is not in complete/finished state (never will be :P). I will keep adding modules and techs as I go to grow the application into something large scale and reflect real-world example all the while preserving the aforementioned principals. Also, this is my personal and subjective take on these principals and it's implementation. Anyone can disagree or better yet, share constructive criticism to improve the code-base and further my/their knowledge. :)```
+## Note
+This repository is not in complete/finished state (never will be :P). I will keep adding modules and techs as I go to grow the application into something large scale and reflect real-world example all the while preserving the aforementioned principals. Also, this is my personal and subjective take on these principals and it's implementation. Anyone can disagree or better yet, share constructive criticism to improve the code-base and further my/their knowledge. :)
