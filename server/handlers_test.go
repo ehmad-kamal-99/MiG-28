@@ -9,10 +9,12 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 
 	domain "backend-svc-template"
+	"backend-svc-template/middleware"
 	"backend-svc-template/mocks"
 )
 
@@ -20,9 +22,13 @@ type mockService struct {
 	bs *mocks.MockBeerService
 }
 
-type Args struct {
+type args struct {
 	ctx *gin.Context
 	rr  *httptest.ResponseRecorder
+}
+
+func init() {
+	binding.Validator = new(middleware.DefaultValidator)
 }
 
 func Test_beer_add(t *testing.T) {
@@ -57,7 +63,7 @@ func Test_beer_add(t *testing.T) {
 
 	tests := []struct {
 		name        string
-		args        Args
+		args        args
 		wantStatus  int
 		mockService func(ms mockService)
 	}{
@@ -66,24 +72,20 @@ func Test_beer_add(t *testing.T) {
 			args:       mkTestContext("POST", nbrb),
 			wantStatus: 201,
 			mockService: func(ms mockService) {
-				ms.bs.EXPECT().Add(nbi).Return(nbo, nil).Times(1)
+				ms.bs.EXPECT().Add(nbi).Return(nbo, nil)
 			},
 		},
 		{
-			name:       "failure - missing beer name",
-			args:       mkTestContext("POST", ibrb),
-			wantStatus: 400,
-			mockService: func(ms mockService) {
-				// ms.bs.EXPECT().Add(&domain.Beer{}).Return(nil, nil)
-			},
+			name:        "failure - missing beer name",
+			args:        mkTestContext("POST", ibrb),
+			wantStatus:  400,
+			mockService: func(ms mockService) {},
 		},
 		{
-			name:       "failure - empty request body",
-			args:       mkTestContext("POST", nil),
-			wantStatus: 400,
-			mockService: func(ms mockService) {
-				// ms.bs.EXPECT().Add(&domain.Beer{}).Return(nil, nil)
-			},
+			name:        "failure - empty request body",
+			args:        mkTestContext("POST", nil),
+			wantStatus:  400,
+			mockService: func(ms mockService) {},
 		},
 	}
 	for _, tt := range tests {
@@ -97,7 +99,7 @@ func Test_beer_add(t *testing.T) {
 	}
 }
 
-func mkTestContext(method string, obj interface{}) Args {
+func mkTestContext(method string, obj interface{}) args {
 	rr := httptest.NewRecorder()
 
 	data, _ := json.Marshal(obj)
@@ -107,7 +109,7 @@ func mkTestContext(method string, obj interface{}) Args {
 	ctx.Request, _ = http.NewRequestWithContext(context.TODO(), method, "", bytes.NewBuffer(data))
 	ctx.Request.Header.Set("Content-Type", "application/json")
 
-	return Args{
+	return args{
 		ctx: ctx,
 		rr:  rr,
 	}
