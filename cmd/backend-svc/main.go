@@ -46,11 +46,11 @@ func main() {
 	bs := storage.NewBeer(mongoClient)
 	rs := storage.NewReview(mongoClient)
 
-	ginSrv := server.New(core.NewBeer(bs), core.NewReview(rs), firebaseAuth)
+	srvr := server.New(core.NewBeer(bs), core.NewReview(rs), firebaseAuth)
 
 	srv := http.Server{
 		Addr:              fmt.Sprintf(":%s", os.Getenv("PORT")),
-		Handler:           ginSrv.Engine(),
+		Handler:           srvr.Mux(),
 		ReadTimeout:       10 * time.Second,
 		ReadHeaderTimeout: 10 * time.Second,
 		WriteTimeout:      10 * time.Second,

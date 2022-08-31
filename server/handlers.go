@@ -2,7 +2,9 @@
 package server
 
 import (
-	"fmt"
+	"encoding/json"
+	"io"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -22,28 +24,54 @@ type beer struct {
 	bs BeerService
 }
 
-func (b *beer) add(ctx *gin.Context) {
-	req := new(newBeerReq)
+func (b *beer) add(w http.ResponseWriter, r *http.Request) {
+	var br newBeerReq
 
-	if err := ctx.Bind(req); err != nil {
-		ctx.JSON(http.StatusBadRequest, nil)
-
-		return
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		w.WriteHeader(500)
+		if _, err := w.Write([]byte("failed to read body")); err != nil {
+			log.Fatal("failed to write response")
+		}
 	}
 
-	fmt.Println("Valid request, Request Body: ", req)
+	if err := json.Unmarshal(body, &br); err != nil {
+		w.WriteHeader(400)
+	}
 
 	beer, err := b.bs.Add(&domain.Beer{
-		Name:  req.Name,
-		Brand: req.Brand,
+		Name:  br.Name,
+		Brand: br.Brand,
 	})
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, nil)
+		w.WriteHeader(500)
+		if _, err := w.Write([]byte("failed to read body")); err != nil {
+			log.Fatal("failed to write response")
+		}
 
 		return
 	}
 
-	ctx.JSON(http.StatusCreated, beer)
+	resp, err := json.Marshal(beer)
+	if err != nil {
+		w.WriteHeader(500)
+		if _, err := w.Write([]byte("failed to marshal response")); err != nil {
+			log.Fatal("failed to write response")
+		}
+
+		return
+	}
+
+	if _, err := w.Write(resp); err != nil {
+		w.WriteHeader(500)
+		if _, err := w.Write([]byte("failed to write response")); err != nil {
+			log.Fatal("failed to write response")
+		}
+
+		return
+	}
+
+	w.WriteHeader(200)
 }
 
 func (b *beer) get(ctx *gin.Context) {

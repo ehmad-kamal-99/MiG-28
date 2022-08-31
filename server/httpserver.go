@@ -3,8 +3,6 @@ package server
 import (
 	"net/http"
 
-	"github.com/gin-gonic/gin"
-
 	"backend-svc-template/middleware"
 )
 
@@ -13,8 +11,7 @@ type server struct {
 	reviewService ReviewService
 
 	firebaseAuth *middleware.FirebaseAuth
-
-	engine *gin.Engine
+	mux          *http.ServeMux
 }
 
 func New(bs BeerService, rs ReviewService, auth *middleware.FirebaseAuth) *server {
@@ -24,43 +21,36 @@ func New(bs BeerService, rs ReviewService, auth *middleware.FirebaseAuth) *serve
 		firebaseAuth:  auth,
 	}
 
-	engine := gin.New()
-
-	engine.Use(middleware.Recovery())
-
-	// service health point
-	engine.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "healthy",
-		})
-	})
-
 	bh := beer{bs: bs}
 	rh := review{rs: rs}
 
-	bg := engine.Group("beer/v1")
-	// bg.Use(auth.Check())
-	{
-		bg.POST("/beer", bh.add)
-		bg.GET("/beer", bh.get)
-		bg.GET("/beers", bh.list)
-		bg.PUT("/beer", bh.edit)
-		bg.DELETE("/beer", bh.delete)
-	}
+	//bg := engine.Group("beer/v1")
+	//// bg.Use(auth.Check())
+	//{
+	//	bg.POST("/beer", bh.add)
+	//	bg.GET("/beer", bh.get)
+	//	bg.GET("/beers", bh.list)
+	//	bg.PUT("/beer", bh.edit)
+	//	bg.DELETE("/beer", bh.delete)
+	//}
+	//
+	//rg := engine.Group("review/v1")
+	//// rg.Use(auth.Check())
+	//{
+	//	rg.POST("/review", rh.add)
+	//	rg.GET("/review", rh.list)
+	//	rg.DELETE("/review", rh.delete)
+	//}
 
-	rg := engine.Group("review/v1")
-	// rg.Use(auth.Check())
-	{
-		rg.POST("/review", rh.add)
-		rg.GET("/review", rh.list)
-		rg.DELETE("/review", rh.delete)
-	}
-
-	s.engine = engine
+	mux := http.NewServeMux()
+	mux.HandleFunc("/beer", bh.add)
+	mux.HandleFunc("/beer", bh.add)
+	mux.HandleFunc("/beers", bh.add)
+	mux.HandleFunc("/beer", bh.add)
 
 	return s
 }
 
-func (s *server) Engine() *gin.Engine {
-	return s.engine
+func (s *server) Mux() *http.ServeMux {
+	return s.mux
 }
